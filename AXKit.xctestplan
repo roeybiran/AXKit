@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "42A03B85-8BC4-40D3-ADCE-3AE7B60FC822",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "AXKit",
+          "name" : "AXKit"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AXKitTests",
+        "name" : "AXKitTests"
+      }
+    }
+  ],
+  "version" : 1
+}
