@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
   name: "AXKit",
   platforms: [
-    .macOS(.v12),
+    .macOS(.v13),
   ],
   products: [
     .library(
