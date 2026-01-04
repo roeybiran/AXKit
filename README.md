@@ -4,8 +4,11 @@ A type-safe wrapper around `AXUIElement.h`.
 
 ## Testability
 
-Because `AXUIElement.h` uses opauqe CF types, testing is nearly impossible without resorting to. Here’s how it could be done with `AXKit` (which was designed to be generic mainly for this purpose):
-Typically, you’ll wrap your business logic that involves `AXKit` in a generic class, from which you’ll expose Swift-native objects relevant to your domain. For example:
+Because `AXUIElement.h` uses opaque CF types, testing is nearly impossible without resorting to mocks. `AXKit` was designed to be generic mainly for this purpose, and `AXKitTestSupport` provides a complete mock implementation.
+
+### Using AXKitTestSupport
+
+In your app, you'll typically create a generic class that wraps over `AXClient`. That class should return native Swift types relevant to your domain. For example:
 
 ```swift
 import AXKit
@@ -14,37 +17,56 @@ struct MenuItem {
   let title: String
 }
 
-class Wrapper<T: AXClient> {
-  let client: T
+class MenuService<Client: AXClient> {
+  let client: Client
 
-  func getMenuItems() -> [MenuItem] {
-  	try client.attributeValue(...)
+  init(client: Client) {
+    self.client = client
+  }
+
+  func getMenuItems(for application: pid_t) throws -> [MenuItem] {
+    let appElement = client.application(pid: application)
+    let menuBar = try client.attributeValue(element: appElement, for: client.menuBar)
+    // ... convert to MenuItem array
+    return []
   }
 }
 ```
 
-Then, you’ll declare a client for your class to be used in production contexts. The fact that it’s generic is now an implementation detail. For example:
+In production, you'll use `AXClientLive`:
 
 ```swift
-class Wrapper {
-	let client = AXClientLive()
-
-	func getMenuItems() -> [MenuItem] {
-  		try client.attributeValue(...)
-  	}
-}
+let service = MenuService(client: AXClientLive())
 ```
 
-And finally, to test your business logic, you’ll use your class and “inject” the mock implementation of `AXKit`, `AXClientMock`. The mock exposes its API using closures that can be easily overridden, along with types that can be easily created, mocked and extended for testing purposes.
+### Testing with Mocks
+
+When testing your class, inject the mock client from `AXKitTestSupport` and override the `var _closures` (not the methods). The mock exposes configurable closures for every protocol method:
 
 ```swift
+import AXKit
+import AXKitTestSupport
+import Testing
+
 @Test
-func basicTest() {
+func getMenuItems_shouldReturnMenuItems() throws {
   let mock = AXClientMock()
-  mock._application = { pid in UIElementMock() }
-  let sut = Wrapper(client: mock)
+  let mockElement = UIElementMock(id: "menu-bar")
+  
+  // Override the closure, not the method
+  mock._application = { pid in UIElementMock(id: "app-\(pid)") }
+  mock._attributeValue = { element, attribute, value in
+    value.pointee = mockElement
+    return .success
+  }
+  
+  let sut = MenuService(client: mock)
+  let items = try sut.getMenuItems(for: 12345)
+  // Assert on items...
 }
 ```
+
+**Important**: Always override the `var _closures` (like `_application`, `_attributeValue`, etc.), not the protocol methods themselves. The mock methods delegate to these closures, allowing you to control behavior in tests.
 
 ## TODO
 
