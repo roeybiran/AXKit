@@ -12,9 +12,6 @@ let package = Package(
     .library(
       name: "AXKit",
       targets: ["AXKit"]),
-    .library(
-      name: "AXKitTestSupport",
-      targets: ["AXKitTestSupport"]),
   ],
   dependencies: [
     .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.0.0"),
@@ -31,13 +28,7 @@ let package = Package(
         .enableExperimentalFeature("StrictConcurrency")
       ]
     ),
-    .target(
-      name: "AXKitTestSupport",
-      dependencies: [
-        "AXKit",
-        .product(name: "Dependencies", package: "swift-dependencies"),
-      ]),
     .testTarget(
       name: "AXKitTests",
-      dependencies: ["AXKit", "AXKitTestSupport"]),
+      dependencies: ["AXKit"]),
   ])

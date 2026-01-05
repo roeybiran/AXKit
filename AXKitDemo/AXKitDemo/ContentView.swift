@@ -3,24 +3,30 @@ import AXKit
 import Cocoa
 import Dependencies
 
-struct ContentView<AX: AXClient>: View {
+struct ContentView<AX: AXClient, RL: CFRunLoopClient> : View  where AX.RunLoopSource == RL.RunLoopSource {
+
 
   let client: AX
+  let manager: AXObserverManager<AX, RL>
 
-  init(ax: AX) {
+  init(ax: AX, rl: RL) {
     self.client = ax
+    self.manager = AXObserverManager(client: client, runLoopClient: rl)
   }
 
   func run(pid: pid_t) {
     do {
       let appElement = client.application(pid: pid)
-      let observer = try client.createObserver(application: pid)
+
+      try manager.createObserver(process: pid)
 //      try? client.addNotification(observer: observer, element: appElement, notification: .titleChanged)
 //      try? client.addNotification(observer: observer, element: appElement, notification: .windowMiniaturized)
 //      try? client.addNotification(observer: observer, element: appElement, notification: .windowDeminiaturized)
-      try? client.addNotification(observer: observer, element: appElement, notification: .windowCreated)
+//      try? client.addNotification(observer: observer, element: appElement, notification: .windowCreated)
+      let stream = manager.notifications(for: pid)
+      try manager.add(notification: .windowCreated, to: pid, element: appElement)
       Task {
-        for await n in client.start(observer: observer) {
+        for try await n in stream {
           print(n)
         }
       }
@@ -34,6 +40,9 @@ struct ContentView<AX: AXClient>: View {
 
     }
     .padding()
+    .onAppear {
+      client.isProcessTrusted(usePrompt: true)
+    }
     .task {
       let pid = NSRunningApplication.runningApplications(withBundleIdentifier: "com.apple.Safari").first!.processIdentifier
 
@@ -43,5 +52,5 @@ struct ContentView<AX: AXClient>: View {
 }
 
 #Preview {
-  ContentView(ax: AXClientLive())
+  ContentView(ax: AXClientLive(), rl: CFRunLoopClientLive())
 }

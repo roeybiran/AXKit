@@ -7,7 +7,7 @@ import AXKit
 struct AXKitDemoApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView(ax: AXClientLive())
+            ContentView(ax: AXClientLive(), rl: CFRunLoopClientLive())
         }
     }
 }
