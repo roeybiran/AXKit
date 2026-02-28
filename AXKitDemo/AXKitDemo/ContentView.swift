@@ -18,18 +18,32 @@ struct ContentView<AX: AXClient, RL: CFRunLoopClient> : View  where AX.RunLoopSo
     do {
       let appElement = client.application(pid: pid)
 
-      try manager.createObserver(process: pid)
+
+      let s = try client.attributeValue(
+        element: appElement,
+        for: client.children, client.windows, client.menuBar,
+        stopOnError: false
+      )
+      let win = s.1!.first!
+      let z = try client.attributeValue(
+        element: win,
+        for: client.children, .title,
+        stopOnError: false
+      )
+
+      print(z.1)
+//      try manager.createObserver(process: pid)
 //      try? client.addNotification(observer: observer, element: appElement, notification: .titleChanged)
 //      try? client.addNotification(observer: observer, element: appElement, notification: .windowMiniaturized)
 //      try? client.addNotification(observer: observer, element: appElement, notification: .windowDeminiaturized)
 //      try? client.addNotification(observer: observer, element: appElement, notification: .windowCreated)
-      let stream = manager.notifications(for: pid)
-      try manager.add(notification: .windowCreated, to: pid, element: appElement)
-      Task {
-        for try await n in stream {
-          print(n)
-        }
-      }
+//      let stream = manager.notifications(for: pid)
+//      try manager.add(notification: .windowCreated, to: pid, element: appElement)
+//      Task {
+//        for try await n in stream {
+//          print(n)
+//        }
+//      }
     } catch {
       print("error!", error)
     }
