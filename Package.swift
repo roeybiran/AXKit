@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
   name: "AXKit",
   platforms: [
-    .macOS(.v13),
+    .macOS(.v14),
   ],
   products: [
     .library(
@@ -24,9 +24,6 @@ let package = Package(
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "DependenciesMacros", package: "swift-dependencies"),
       ],
-      swiftSettings: [
-        .enableExperimentalFeature("StrictConcurrency")
-      ]
     ),
     .testTarget(
       name: "AXKitTests",
@@ -34,3 +31,12 @@ let package = Package(
   ],
   swiftLanguageModes: [.v5]
 )
+
+for target in package.targets {
+  var settings = target.swiftSettings ?? []
+  settings.append(contentsOf: [
+    .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+    .enableUpcomingFeature("InferIsolatedConformances")
+  ])
+  target.swiftSettings = settings
+}

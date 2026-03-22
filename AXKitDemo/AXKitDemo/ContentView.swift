@@ -1,42 +1,48 @@
-import SwiftUI
 import AXKit
 import Cocoa
 import Dependencies
+import SwiftUI
 
-struct ContentView<AX: AXClient, RL: CFRunLoopClient> : View  where AX.RunLoopSource == RL.RunLoopSource {
+struct ContentView<AX: AXClient, RL: CFRunLoopClient>: View where AX.RunLoopSource == RL.RunLoopSource {
 
+  // MARK: Lifecycle
+
+  init(ax: AX, rl: RL) {
+    client = ax
+    manager = AXObserverManager(client: client, runLoopClient: rl)
+  }
+
+  // MARK: Internal
 
   let client: AX
   let manager: AXObserverManager<AX, RL>
 
-  init(ax: AX, rl: RL) {
-    self.client = ax
-    self.manager = AXObserverManager(client: client, runLoopClient: rl)
+  var body: some View {
+    VStack { }
+      .padding()
+      .onAppear {
+        client.isProcessTrusted(usePrompt: true)
+      }
+      .task {
+        let pid = NSRunningApplication.runningApplications(withBundleIdentifier: "com.apple.Safari").first!.processIdentifier
+
+        run(pid: pid)
+      }
   }
 
   func run(pid: pid_t) {
     do {
       let appElement = client.application(pid: pid)
 
-
       let s = try client.attributeValue(
         element: appElement,
         for: client.children, client.windows, client.menuBar,
-        stopOnError: false
-      )
+        stopOnError: false)
       let win = s.1!.first!
-      let z = try client.attributeValue(
+      _ = try client.attributeValue(
         element: win,
         for: client.children, .title,
-        stopOnError: false
-      )
-
-      print(z.1)
-//      try manager.createObserver(process: pid)
-//      try? client.addNotification(observer: observer, element: appElement, notification: .titleChanged)
-//      try? client.addNotification(observer: observer, element: appElement, notification: .windowMiniaturized)
-//      try? client.addNotification(observer: observer, element: appElement, notification: .windowDeminiaturized)
-//      try? client.addNotification(observer: observer, element: appElement, notification: .windowCreated)
+        stopOnError: false)
 //      let stream = manager.notifications(for: pid)
 //      try manager.add(notification: .windowCreated, to: pid, element: appElement)
 //      Task {
@@ -44,25 +50,9 @@ struct ContentView<AX: AXClient, RL: CFRunLoopClient> : View  where AX.RunLoopSo
 //          print(n)
 //        }
 //      }
-    } catch {
-      print("error!", error)
-    }
+    } catch {}
   }
 
-  var body: some View {
-    VStack {
-
-    }
-    .padding()
-    .onAppear {
-      client.isProcessTrusted(usePrompt: true)
-    }
-    .task {
-      let pid = NSRunningApplication.runningApplications(withBundleIdentifier: "com.apple.Safari").first!.processIdentifier
-
-      run(pid: pid)
-    }
-  }
 }
 
 #Preview {
