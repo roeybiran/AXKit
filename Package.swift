@@ -23,20 +23,18 @@ let package = Package(
       dependencies: [
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "DependenciesMacros", package: "swift-dependencies"),
-      ],
-    ),
+      ]),
     .testTarget(
       name: "AXKitTests",
       dependencies: ["AXKit"]),
   ],
-  swiftLanguageModes: [.v5]
-)
+  swiftLanguageModes: [.v5])
 
 for target in package.targets {
   var settings = target.swiftSettings ?? []
   settings.append(contentsOf: [
     .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
-    .enableUpcomingFeature("InferIsolatedConformances")
+    .enableUpcomingFeature("InferIsolatedConformances"),
   ])
   target.swiftSettings = settings
 }
