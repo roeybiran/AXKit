@@ -35,6 +35,7 @@ for target in package.targets {
   settings.append(contentsOf: [
     .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
     .enableUpcomingFeature("InferIsolatedConformances"),
+    .enableUpcomingFeature("IsolatedDefaultValues"),
   ])
   target.swiftSettings = settings
 }
