@@ -2,6 +2,14 @@
 
 A type-safe wrapper around `AXUIElement.h`.
 
+## Development setup
+
+After cloning:
+
+```sh
+git config core.hooksPath .githooks
+```
+
 ## Testability
 
 Because `AXUIElement.h` uses opaque CF types, testing is nearly impossible without resorting to mocks. `AXKit` was designed to be generic mainly for this purpose, and `AXKitTestSupport` provides a complete mock implementation.

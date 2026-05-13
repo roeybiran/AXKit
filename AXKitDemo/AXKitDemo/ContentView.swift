@@ -36,13 +36,18 @@ struct ContentView<AX: AXClient, RL: CFRunLoopClient>: View where AX.RunLoopSour
 
       let s = try client.attributeValue(
         element: appElement,
-        for: client.children, client.windows, client.menuBar,
-        stopOnError: false)
+        for: client.children,
+        client.windows,
+        client.menuBar,
+        stopOnError: false,
+      )
       let win = s.1!.first!
       _ = try client.attributeValue(
         element: win,
-        for: client.children, .title,
-        stopOnError: false)
+        for: client.children,
+        .title,
+        stopOnError: false,
+      )
 //      let stream = manager.notifications(for: pid)
 //      try manager.add(notification: .windowCreated, to: pid, element: appElement)
 //      Task {
@@ -50,7 +55,7 @@ struct ContentView<AX: AXClient, RL: CFRunLoopClient>: View where AX.RunLoopSour
 //          print(n)
 //        }
 //      }
-    } catch {}
+    } catch { }
   }
 
 }

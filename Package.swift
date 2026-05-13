@@ -6,12 +6,13 @@ import PackageDescription
 let package = Package(
   name: "AXKit",
   platforms: [
-    .macOS(.v14),
+    .macOS(.v14)
   ],
   products: [
     .library(
       name: "AXKit",
-      targets: ["AXKit"]),
+      targets: ["AXKit"],
+    )
   ],
   dependencies: [
     .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.0.0"),
@@ -23,12 +24,15 @@ let package = Package(
       dependencies: [
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "DependenciesMacros", package: "swift-dependencies"),
-      ]),
+      ],
+    ),
     .testTarget(
       name: "AXKitTests",
-      dependencies: ["AXKit"]),
+      dependencies: ["AXKit"],
+    ),
   ],
-  swiftLanguageModes: [.v6])
+  swiftLanguageModes: [.v6],
+)
 
 for target in package.targets {
   var settings = target.swiftSettings ?? []
