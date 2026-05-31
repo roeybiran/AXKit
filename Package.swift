@@ -15,6 +15,7 @@ let package = Package(
     )
   ],
   dependencies: [
+    .package(path: "../RBKit"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.0.0"),
     .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", from: "1.9.0"),
     .package(url: "https://github.com/airbnb/swift", from: "1.0.0"),
@@ -23,6 +24,7 @@ let package = Package(
     .target(
       name: "AXKit",
       dependencies: [
+        "RBKit",
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "DependenciesMacros", package: "swift-dependencies"),
         .product(name: "IssueReporting", package: "xctest-dynamic-overlay"),
@@ -30,7 +32,10 @@ let package = Package(
     ),
     .testTarget(
       name: "AXKitTests",
-      dependencies: ["AXKit"],
+      dependencies: [
+        "AXKit",
+        "RBKit",
+      ],
     ),
   ],
   swiftLanguageModes: [.v6],

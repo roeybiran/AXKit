@@ -1,9 +1,10 @@
 import AXKit
 import Cocoa
 import Dependencies
+import RBKit
 import SwiftUI
 
-struct ContentView<AX: AXClient, RL: CFRunLoopClient>: View where AX.RunLoopSource == RL.RunLoopSource {
+struct ContentView<AX: AXClient, RL: CFRunLoopClientProtocol>: View where AX.RunLoopSource == RL.RunLoopSource {
 
   // MARK: Lifecycle
 
