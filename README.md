@@ -16,7 +16,7 @@ Because `AXUIElement.h` uses opaque CF types, testing is nearly impossible witho
 
 ### Using AXKitTestSupport
 
-In your app, you'll typically create a generic class that wraps over `AXClient`. That class should return native Swift types relevant to your domain. For example:
+In your app, you'll typically create a generic class that wraps over `AXClientProtocol`. That class should return native Swift types relevant to your domain. For example:
 
 ```swift
 import AXKit
@@ -25,7 +25,7 @@ struct MenuItem {
   let title: String
 }
 
-class MenuService<Client: AXClient> {
+class MenuService<AXClient: AXClientProtocol> {
   let client: Client
 
   init(client: Client) {

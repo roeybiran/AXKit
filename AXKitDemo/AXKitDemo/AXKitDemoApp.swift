@@ -8,7 +8,7 @@ import SwiftUI
 struct AXKitDemoApp: App {
   var body: some Scene {
     WindowGroup {
-      ContentView(ax: AXClientLive(), rl: CFRunLoopClientLive())
+      ContentView(ax: AXClientLive(), rl: CFRunLoopClientLive.Current())
     }
   }
 }
