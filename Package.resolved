@@ -1,5 +1,5 @@
 {
-  "originHash" : "b441a8c26fcb2a262520deb2a612c6caff699fb7f3860cb836e73254d21ae103",
+  "originHash" : "2210fa469c268e1c6d4cbac27eaaa4f36fd082f43fd37b4268e36cff9fdaf694",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "dcccb979a2183b8df3334237e3dc1ae2b4116a86",
         "version" : "1.2.0"
+      }
+    },
+    {
+      "identity" : "rbkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/roeybiran/RBKit",
+      "state" : {
+        "branch" : "main",
+        "revision" : "86554ed005d49cc7c1723fedc8abc0b4d212b24e"
       }
     },
     {
