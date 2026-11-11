@@ -1,5 +1,7 @@
 # AXKit
 
+> **Archived.** AXKit is now part of [RBKit](https://github.com/roeybiran/RBKit) (`Sources/RBKit/AXKit`). Replace the AXKit package with RBKit and `import AXKit` with `import RBKit`.
+
 A type-safe wrapper around `AXUIElement.h`.
 
 ## Development setup
